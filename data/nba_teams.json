@@ -1,0 +1,19 @@
+{
+  "teams": [
+    {"id": "LAL", "name": "Los Angeles Lakers", "logo": "https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg"},
+    {"id": "GSW", "name": "Golden State Warriors", "logo": "https://cdn.nba.com/logos/nba/1610612744/primary/L/logo.svg"},
+    {"id": "BOS", "name": "Boston Celtics", "logo": "https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg"},
+    {"id": "MIA", "name": "Miami Heat", "logo": "https://cdn.nba.com/logos/nba/1610612748/primary/L/logo.svg"},
+    {"id": "MIL", "name": "Milwaukee Bucks", "logo": "https://cdn.nba.com/logos/nba/1610612749/primary/L/logo.svg"},
+    {"id": "PHI", "name": "Philadelphia 76ers", "logo": "https://cdn.nba.com/logos/nba/1610612755/primary/L/logo.svg"},
+    {"id": "DEN", "name": "Denver Nuggets", "logo": "https://cdn.nba.com/logos/nba/1610612743/primary/L/logo.svg"},
+    {"id": "PHX", "name": "Phoenix Suns", "logo": "https://cdn.nba.com/logos/nba/1610612756/primary/L/logo.svg"},
+    {"id": "DAL", "name": "Dallas Mavericks", "logo": "https://cdn.nba.com/logos/nba/1610612742/primary/L/logo.svg"},
+    {"id": "BKN", "name": "Brooklyn Nets", "logo": "https://cdn.nba.com/logos/nba/1610612751/primary/L/logo.svg"},
+    {"id": "LAC", "name": "LA Clippers", "logo": "https://cdn.nba.com/logos/nba/1610612746/primary/L/logo.svg"},
+    {"id": "NYK", "name": "New York Knicks", "logo": "https://cdn.nba.com/logos/nba/1610612752/primary/L/logo.svg"},
+    {"id": "CHI", "name": "Chicago Bulls", "logo": "https://cdn.nba.com/logos/nba/1610612741/primary/L/logo.svg"},
+    {"id": "TOR", "name": "Toronto Raptors", "logo": "https://cdn.nba.com/logos/nba/1610612761/primary/L/logo.svg"},
+    {"id": "MEM", "name": "Memphis Grizzlies", "logo": "https://cdn.nba.com/logos/nba/1610612763/primary/L/logo.svg"}
+  ]
+}
