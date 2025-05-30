@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SportPredict Pro | NBA & MLB AI Predictions</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --nba-blue: #5b9bd5;
+            --nba-red: #ff6b6b;
+            --mlb-blue: #6c8dfa;
+            --mlb-red: #ff8e8e;
+            --bg-dark: #1a1a2e;
+            --card-dark: #16213e;
+            --text-light: #e6e6e6;
+            --text-muted: #aaaaaa;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-light);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+        }
+        
+        .sport-tabs .nav-link {
+            font-weight: 600;
+            background-color: var(--card-dark);
+            border-color: #2a2a3a;
+            color: var(--text-light);
+        }
+        
+        .sport-tabs .nav-link.active {
+            background-color: var(--bg-dark);
+            border-bottom-color: var(--bg-dark);
+        }
+        
+        .nba-tab.active {
+            color: var(--nba-blue);
+            border-bottom: 3px solid var(--nba-blue);
+        }
+        
+        .mlb-tab.active {
+            color: var(--mlb-blue);
+            border-bottom: 3px solid var(--mlb-blue);
+        }
+        
+        .tab-content {
+            background-color: var(--bg-dark);
+        }
+        
+        .card {
+            background-color: var(--card-dark);
+            border-color: #2a2a3a;
+            color: var(--text-light);
+        }
+        
+        .card-header {
+            border-bottom-color: #2a2a3a;
+        }
+        
+        .prediction-card {
+            border-left: 4px solid;
+            transition: all 0.3s;
+        }
+        
+        .nba-prediction {
+            border-left-color: var(--nba-blue);
+        }
+        
+        .mlb-prediction {
+            border-left-color: var(--mlb-blue);
+        }
+        
+        .player-card {
+            transition: transform 0.2s;
+            background-color: #0f3460;
+        }
+        
+        .player-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .confidence-high {
+            color: #6bd475;
+        }
+        
+        .confidence-medium {
+            color: #ffd166;
+        }
+        
+        .confidence-low {
+            color: #ef476f;
+        }
+        
+        .live-badge {
+            animation: pulse 1.5s infinite;
+        }
+        
+        .form-control, .form-select {
+            background-color: #0f3460;
+            border-color: #2a2a3a;
+            color: var(--text-light);
+        }
+        
+        .progress {
+            background-color: #0f3460;
+        }
+        
+        .alert-warning {
+            background-color: #5e4b1a;
+            border-color: #5e4b1a;
+            color: #ffd166;
+        }
+        
+        .alert-danger {
+            background-color: #5a1a2e;
+            border-color: #5a1a2e;
+            color: #ef476f;
+        }
+        
+        .alert-success {
+            background-color: #1a5a3a;
+            border-color: #1a5a3a;
+            color: #06d6a0;
+        }
+        
+        .text-muted {
+            color: var(--text-muted) !important;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: #0f3460;">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-robot me-2"></i>SportPredict Pro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#"><i class="fas fa-home me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-chart-line me-1"></i> Analytics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-cog me-1"></i> Settings</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container my-4">
+        <!-- Sport Selection Tabs -->
+        <ul class="nav nav-tabs sport-tabs" id="sportTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active nba-tab" id="nba-tab" data-bs-toggle="tab" data-bs-target="#nba" type="button">
+                    <i class="fas fa-basketball-ball me-1"></i> NBA Predictions
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link mlb-tab" id="mlb-tab" data-bs-toggle="tab" data-bs-target="#mlb" type="button">
+                    <i class="fas fa-baseball-ball me-1"></i> MLB Predictions
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="sportTabsContent">
+            <!-- NBA Tab -->
+            <div class="tab-pane fade show active" id="nba" role="tabpanel">
+                <div class="row mt-3">
+                    <!-- Prediction Form -->
+                    <div class="col-md-4">
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-header text-white" style="background-color: var(--nba-blue);">
+                                <h5 class="mb-0"><i class="fas fa-calculator me-2"></i>NBA Predictor</h5>
+                            </div>
+                            <div class="card-body">
+                                <form id="nbaPredictionForm">
+                                    <div class="mb-3">
+                                        <label for="homeTeam" class="form-label">Home Team</label>
+                                        <select class="form-select" id="homeTeam">
+                                            <option selected disabled>Select team</option>
+                                            <!-- Top 15 NBA Teams -->
+                                            <option value="LAL">Los Angeles Lakers</option>
+                                            <option value="GSW">Golden State Warriors</option>
+                                            <option value="BOS">Boston Celtics</option>
+                                            <option value="MIA">Miami Heat</option>
+                                            <option value="MIL">Milwaukee Bucks</option>
+                                            <option value="PHI">Philadelphia 76ers</option>
+                                            <option value="DEN">Denver Nuggets</option>
+                                            <option value="PHX">Phoenix Suns</option>
+                                            <option value="DAL">Dallas Mavericks</option>
+                                            <option value="BKN">Brooklyn Nets</option>
+                                            <option value="LAC">LA Clippers</option>
+                                            <option value="NYK">New York Knicks</option>
+                                            <option value="CHI">Chicago Bulls</option>
+                                            <option value="TOR">Toronto Raptors</option>
+                                            <option value="MEM">Memphis Grizzlies</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="awayTeam" class="form-label">Away Team</label>
+                                        <select class="form-select" id="awayTeam">
+                                            <option selected disabled>Select team</option>
+                                            <option value="LAL">Los Angeles Lakers</option>
+                                            <option value="GSW">Golden State Warriors</option>
+                                            <option value="BOS">Boston Celtics</option>
+                                            <option value="MIA">Miami Heat</option>
+                                            <option value="MIL">Milwaukee Bucks</option>
+                                            <option value="PHI">Philadelphia 76ers</option>
+                                            <option value="DEN">Denver Nuggets</option>
+                                            <option value="PHX">Phoenix Suns</option>
+                                            <option value="DAL">Dallas Mavericks</option>
+                                            <option value="BKN">Brooklyn Nets</option>
+                                            <option value="LAC">LA Clippers</option>
+                                            <option value="NYK">New York Knicks</option>
+                                            <option value="CHI">Chicago Bulls</option>
+                                            <option value="TOR">Toronto Raptors</option>
+                                            <option value="MEM">Memphis Grizzlies</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn w-100" style="background-color: var(--nba-blue); color: white;">
+                                        <i class="fas fa-brain me-2"></i>Generate Prediction
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+
+                        <!-- Injury Reports -->
+                        <div class="card shadow-sm">
+                            <div class="card-header text-white" style="background-color: var(--nba-red);">
+                                <h5 class="mb-0"><i class="fas fa-procedures me-2"></i>Injury Reports <span class="badge bg-white text-danger live-badge">LIVE</span></h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert alert-warning p-2 mb-2">
+                                    <strong>LeBron James (LAL):</strong> Questionable - Ankle soreness
+                                </div>
+                                <div class="alert alert-danger p-2 mb-2">
+                                    <strong>Stephen Curry (GSW):</strong> Out - Wrist fracture
+                                </div>
+                                <div class="alert alert-success p-2">
+                                    <strong>Jayson Tatum (BOS):</strong> Active
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Prediction Results -->
+                    <div class="col-md-8">
+                        <div class="card shadow-sm mb-4 prediction-card nba-prediction">
+                            <div class="card-header" style="background-color: #0f3460;">
+                                <h5 class="mb-0"><i class="fas fa-chart-pie me-2"></i>Prediction Results</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-5 text-center">
+                                        <img src="https://cdn.nba.com/logos/nba/1610612747/primary/L/logo.svg" alt="Lakers" height="80" class="mb-2">
+                                        <h4>Los Angeles Lakers</h4>
+                                        <div class="progress mb-3" style="height: 20px;">
+                                            <div class="progress-bar" style="width: 65%; background-color: var(--nba-blue);" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <h2 class="my-4">VS</h2>
+                                        <p class="text-muted">Jun 15, 7:30 PM ET</p>
+                                    </div>
+                                    <div class="col-md-5 text-center">
+                                        <img src="https://cdn.nba.com/logos/nba/1610612738/primary/L/logo.svg" alt="Celtics" height="80" class="mb-2">
+                                        <h4>Boston Celtics</h4>
+                                        <div class="progress mb-3" style="height: 20px;">
+                                            <div class="progress-bar" style="width: 35%; background-color: var(--nba-red);" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100">35%</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <h5><i class="fas fa-lightbulb me-2"></i>AI Analysis</h5>
+                                    <p>The Lakers have a 65% chance to win based on their recent home performance (8-2 last 10) and the Celtics' road struggles (3-7 last 10 away). Key factor: Anthony Davis averages 28.7 PPG against Boston.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Key Players -->
+                        <div class="card shadow-sm">
+                            <div class="card-header" style="background-color: #0f3460;">
+                                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Key Players to Watch</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card player-card h-100">
+                                            <img src="https://cdn.nba.com/headshots/nba/latest/1040x760/2544.png" class="card-img-top" alt="LeBron James">
+                                            <div class="card-body">
+                                                <h5 class="card-title">LeBron James</h5>
+                                                <p class="card-text">
+                                                    <small class="text-muted">LAL · SF</small><br>
+                                                    Last 5 games: 27.4 PPG, 8.2 RPG<br>
+                                                    <span class="confidence-high">+12.3 Impact Score</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card player-card h-100">
+                                            <img src="https://cdn.nba.com/headshots/nba/latest/1040x760/203076.png" class="card-img-top" alt="Jayson Tatum">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Jayson Tatum</h5>
+                                                <p class="card-text">
+                                                    <small class="text-muted">BOS · SF</small><br>
+                                                    Last 5 games: 30.1 PPG, 7.5 RPG<br>
+                                                    <span class="confidence-medium">+8.7 Impact Score</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card player-card h-100">
+                                            <img src="https://cdn.nba.com/headshots/nba/latest/1040x760/203507.png" class="card-img-top" alt="Anthony Davis">
+                                            <div class="card-body">
+                                                <h5 class="card-title">Anthony Davis</h5>
+                                                <p class="card-text">
+                                                    <small class="text-muted">LAL · PF</small><br>
+                                                    Last 5 games: 25.8 PPG, 12.3 RPG<br>
+                                                    <span class="confidence-high">+15.1 Impact Score</span>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MLB Tab -->
+            <div class="tab-pane fade" id="mlb" role="tabpanel">
+                <div class="row mt-3">
+                    <!-- MLB content would follow same structure as NBA -->
+                    <div class="col-12 text-center py-5">
+                        <h3><i class="fas fa-baseball-ball me-2"></i>MLB Predictions Coming Soon</h3>
+                        <p class="text-muted">Our AI is currently training on baseball data</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Data Footer -->
+    <footer class="py-3 mt-4" style="background-color: #0f3460;">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5><i class="fas fa-bolt me-2"></i>Live Updates</h5>
+                    <div class="d-flex align-items-center">
+                        <div class="flex-shrink-0">
+                            <span class="badge bg-danger me-2">LIVE</span>
+                        </div>
+                        <div class="flex-grow-1 ms-3">
+                            <marquee behavior="scroll" direction="left">
+                                <span class="me-4">⚾ NYY 3 - BOS 2 (Top 7th)</span>
+                                <span class="me-4">🏀 LAL 89 - GSW 85 (Q3 4:32)</span>
+                                <span class="me-4">⚠️ Injury: Mike Trout (LAA) left game</span>
+                            </marquee>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 text-end">
+                    <p class="mb-0">
+                        <i class="fas fa-sync-alt me-2"></i>Last updated: <span id="lastUpdated">Just now</span>
+                    </p>
+                    <small class="text-muted">AI Model v2.4.1 | Data refreshes every 5 minutes</small>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script>
+        // Simulate form submission
+        document.getElementById('nbaPredictionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Prediction request sent to backend!');
+            // In real app: Fetch API and update DOM
+        });
+        
+        // Update last updated time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('lastUpdated').textContent = now.toLocaleTimeString();
+        }
+        setInterval(updateTime, 60000);
+        updateTime();
+    </script>
+</body>
+</html>
